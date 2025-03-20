@@ -13,7 +13,6 @@
             ],
             "program": "${workspaceFolder}/backend/index.js",
             "env": {
-                
             }
         }
     ]
