@@ -2,7 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const whatsappController = require('./controllers/whatsappController');
-const WEBHOOK_VERIFY_TOKEN = "1";
+const WEBHOOK_VERIFY_TOKEN = 1;
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
