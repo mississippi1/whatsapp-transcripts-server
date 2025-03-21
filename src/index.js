@@ -15,7 +15,7 @@ app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
 
-app.get("/webhook", (req, res) => {
+app.get("/", (req, res) => {
   console.log("Webhook received", req);
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
