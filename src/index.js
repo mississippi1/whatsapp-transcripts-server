@@ -16,12 +16,14 @@ app.listen(PORT, () => {
 });
 
 app.get("/webhook", (req, res) => {
+  console.log("Webhook received", req);
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
   const challenge = req.query["hub.challenge"];
 
   // check the mode and token sent are correct
-  if (mode === "subscribe" && token === WEBHOOK_VERIFY_TOKEN) {
+  console.log(mode === "subscribe" && token === WEBHOOK_VERIFY_TOKEN);
+  if (token === WEBHOOK_VERIFY_TOKEN) {
     // respond with 200 OK and challenge token from the request
     res.status(200).send(challenge);
     console.log("Webhook verified successfully!");
