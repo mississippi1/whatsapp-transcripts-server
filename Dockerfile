@@ -5,10 +5,11 @@ FROM node:18-slim
 WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json
-COPY package*.json ./
+COPY package.json package-lock.json ./
+
 
 # Install dependencies
-RUN npm ci --only=production
+RUN npm install
 
 # Copy app source code
 COPY . .
@@ -18,4 +19,4 @@ ENV PORT=8080
 EXPOSE 8080
 
 # Start the application
-CMD [ "node", "index.js" ]
+CMD [ "node", "src/index.js" ]

@@ -1,34 +1,40 @@
-// backend/index.js
+'use strict';
+
 const express = require('express');
-const bodyParser = require('body-parser');
-const whatsappController = require('./controllers/whatsappController');
-const WEBHOOK_VERIFY_TOKEN = 1;
+const helmet = require('helmet');
+const { config } = require('./config/config');
+const { setupRoutes } = require('./controllers/webhookController');
+const { logger } = require('./utils/logger');
+const { errorHandler } = require('./utils/errorHandler');
+
+// Create Express application
 const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 
-// Webhook endpoint for incoming WhatsApp messages from Twilio
-app.post('/webhook/whatsapp', whatsappController.handleIncomingMessage);
+// Apply security middleware
+app.use(helmet());
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+// Parse JSON request bodies
+app.use(express.json());
+
+// Parse URL-encoded request bodies
+app.use(express.urlencoded({ extended: true }));
+
+// Set up routes
+setupRoutes(app);
+
+// Global error handler
+app.use(errorHandler);
+
+// Start the server
+const server = app.listen(config.port, () => {
+  logger.info(`Server running on port ${config.port} in ${config.environment} mode`);
 });
 
-app.get("/", (req, res) => {
-  console.log("Webhook received", req);
-  const mode = req.query["hub.mode"];
-  const token = req.query["hub.verify_token"];
-  const challenge = req.query["hub.challenge"];
-
-  // check the mode and token sent are correct
-  console.log(mode === "subscribe" && token === WEBHOOK_VERIFY_TOKEN);
-  if (token === WEBHOOK_VERIFY_TOKEN) {
-    // respond with 200 OK and challenge token from the request
-    res.status(200).send(challenge);
-    console.log("Webhook verified successfully!");
-  } else {
-    // respond with '403 Forbidden' if verify tokens do not match
-    res.sendStatus(403);
-  }
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err) => {
+  logger.error('Unhandled Rejection:', err);
+  // Close server & exit process
+  server.close(() => process.exit(1));
 });
+
+module.exports = { app, server };
