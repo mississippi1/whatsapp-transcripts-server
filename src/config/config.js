@@ -20,10 +20,6 @@ const config = {
     webhookVerifyToken: process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN
   },
   
-  googleSpeech: {
-    credentialsPath: process.env.GOOGLE_APPLICATION_CREDENTIALS
-  },
-  
   logging: {
     level: process.env.LOG_LEVEL || 'info'
   }
@@ -38,8 +34,7 @@ const validateConfig = () => {
     'whatsapp.apiUrl',
     'whatsapp.phoneNumberId',
     'whatsapp.accessToken',
-    'whatsapp.webhookVerifyToken',
-    'googleSpeech.credentialsPath'
+    'whatsapp.webhookVerifyToken'
   ];
   
   const missingConfigs = requiredConfigs.filter(configPath => {
