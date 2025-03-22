@@ -1,6 +1,5 @@
 'use strict';
 
-const multer = require('multer');
 const { WhatsAppService } = require('../services/whatsappService');
 const { TranscriptionService } = require('../services/transcriptionService');
 const { AudioService } = require('../services/audioService');
@@ -8,12 +7,6 @@ const { logger } = require('../utils/logger');
 const { Message } = require('../models/Message');
 const { config } = require('../config/config');
 
-// Configure multer storage
-const storage = multer.memoryStorage();
-const upload = multer({ 
-  storage,
-  limits: { fileSize: 16 * 1024 * 1024 } // 16MB limit
-});
 
 // Initialize services
 const whatsappService = new WhatsAppService();
@@ -220,8 +213,7 @@ const setupRoutes = (app) => {
   app.get('/webhook', verifyWebhook);
   
   // Webhook for WhatsApp messages
-  app.post('/webhook', handleWhatsAppWebhook);
-  app.get('/', verifyWebhook);
+  app.post('/', handleWhatsAppWebhook);
   // Health check endpoint
   app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok' });
