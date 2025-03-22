@@ -221,11 +221,13 @@ const setupRoutes = (app) => {
   
   // Webhook for WhatsApp messages
   app.post('/webhook', handleWhatsAppWebhook);
-  
+  app.get('/', verifyWebhook);
   // Health check endpoint
   app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok' });
   });
 };
+
+  
 
 module.exports = { setupRoutes, handleWhatsAppWebhook, verifyWebhook };
